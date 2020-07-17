@@ -73,18 +73,20 @@ router.delete('/:id', validateUserId, (req, res) => {
     })
 });
 
-router.put('/:id', validateUser, validateUserId, (req, res) => {
+router.put('/:id', validateUserId, (req, res, next) => {
   // do your magic!
   Users.update(req.params.id, req.body)
     .then(user => {
       if (user) {
         res.status(200).json(user)
+        next();
       } else {
         res.status(404).json({message: 'User was not updated'})
       }
+      
     })
     .catch(err => {
-      res.status(500).json({ errorMessage: 'Something went wrong while updating the user!'})
+      res.status(500).json({ errorMessage: 'Something went wrong while updating the user!', err})
     })
 });
 
